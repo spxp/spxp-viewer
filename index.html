@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPXP Viewer</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { margin-bottom: 10px; }
+        .search-box { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+        }
+        .search-box input { 
+            flex: 1; 
+            padding: 10px; 
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .search-box button { 
+            padding: 10px 20px; 
+            font-size: 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .search-box button:hover { background: #0056b3; }
+        
+        .profile-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .profile-header {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .profile-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #ddd;
+        }
+        .profile-info h2 { margin: 0 0 5px 0; }
+        .profile-info .short-info { color: #666; margin: 0 0 10px 0; }
+        .profile-info .about { margin: 10px 0; }
+        .profile-info .website a { color: #007bff; }
+        .profile-uri {
+            font-size: 12px;
+            color: #999;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+        
+        .section { margin-top: 30px; }
+        .section h3 { 
+            border-bottom: 2px solid #007bff; 
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .post {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .post-meta {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+        .post-message { margin: 0; }
+        .post-link { 
+            display: block;
+            margin-top: 8px;
+            color: #007bff;
+            word-break: break-all;
+        }
+        .post-image {
+            max-width: 100%;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        
+        .friend {
+            display: inline-block;
+            background: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .friend:hover { background: #e8f4ff; }
+        
+        .nav-history {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .nav-history button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .nav-history button:hover { background: #5a6268; }
+        
+        .load-more {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .load-more:hover { background: #218838; }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .examples {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        .examples h4 { margin: 0 0 10px 0; }
+        .examples a {
+            display: block;
+            color: #007bff;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        .examples a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>🌐 SPXP Viewer</h1>
+    <p>Browse the decentralized social web</p>
+    
+    <div class="search-box">
+        <input type="text" id="profileUrl" placeholder="Enter SPXP Profile URL..." 
+               value="https://spxp.org/spxp">
+        <button onclick="loadProfile()">Load Profile</button>
+    </div>
+    
+    <div id="navHistory" class="nav-history" style="display: none;">
+        <button onclick="goBack()">← Back</button>
+        <span id="historyInfo"></span>
+    </div>
+    
+    <div id="examples" class="examples">
+        <h4>Example Profiles:</h4>
+        <a onclick="loadProfileUrl('https://spxp.org/spxp')">SPXP.org Official</a>
+        <a onclick="loadProfileUrl('http://testbed.spxp.org/0.3/heavyfrog799')">Testbed: Mia White</a>
+        <a onclick="loadProfileUrl('http://testbed.spxp.org/0.3/organicfish977')">Testbed: organicfish977</a>
+        <a onclick="loadProfileUrl('http://testbed.spxp.org/0.3/beautifulpanda469')">Testbed: beautifulpanda469</a>
+    </div>
+    
+    <div id="content"></div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
