@@ -1,0 +1,27 @@
+name: Deploy on push to master
+on:
+  push:
+    branches: [ master ]
+jobs:
+  deploy:
+    name: Deploy to Alfahosting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v4
+
+      - name: Upload to webserver
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./
+          server-dir: spxphosting.de/viewer/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            server.js
