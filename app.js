@@ -361,8 +361,9 @@ function escapeHtml(text) {
 
 function formatDate(timestamp) {
     try {
-        // SPXP timestamps are UTC without timezone suffix
-        const date = new Date(timestamp + 'Z');
+        // Ensure UTC indicator is present (some servers omit the Z suffix)
+        const ts = timestamp.endsWith('Z') ? timestamp : timestamp + 'Z';
+        const date = new Date(ts);
         return date.toLocaleString();
     } catch (e) {
         return timestamp;
